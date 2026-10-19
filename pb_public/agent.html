@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Portal</title><link rel="stylesheet" href="/style.css"></head><body>
+<header class="top"><strong class="logo">◆ Agent Portal</strong><span id="who" class="mut"></span><span><a href="/">View site</a> · <a href="#" onclick="out()">Logout</a></span></header>
+<main id="app"></main>
+<script>
+const API='/api/collections/',S=sessionStorage;let me=JSON.parse(S.me||'null'),tab='listings',edit=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(p,o={}){o.headers={...(o.headers||{}),Authorization:S.tok||''};const r=await fetch(API+p,o);
+ if(r.status===401){out();throw 0}if(!r.ok){alert((await r.json().catch(()=>({}))).message||'Not allowed');throw 0}return r.status===204?{}:r.json()}
+const mgr=()=>me&&me.role==='manager';
+function login(){$w('');app.innerHTML=`<div class="card b" style="max-width:340px;margin:60px auto"><h3>Agent login</h3><input id="em" placeholder="Email" style="margin-bottom:8px"><input id="pw" type="password" placeholder="Password" style="margin-bottom:10px" onkeydown="event.key==='Enter'&&go()"><button onclick="go()">Enter</button></div>`}
+const $w=t=>document.getElementById('who').textContent=t;
+async function go(){const r=await fetch(API+'users/auth-with-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:em.value,password:pw.value})});
+ if(!r.ok)return alert('Wrong email or password');const d=await r.json();S.tok=d.token;me=d.record;S.me=JSON.stringify(me);render()}
+function out(){S.clear();me=null;login()}
+const tabs=()=>`<div class="tabs">${['listings','inquiries'].map(t=>`<button class="${t===tab?'on':''}" onclick="tab='${t}';edit=null;render()">${t}</button>`).join('')}</div>`;
+async function render(){if(!me||!S.tok)return login();$w((me.name||me.email)+' · '+(me.role||'agent'));let h=tabs();
+ if(tab==='listings'){const f=mgr()?'':`&filter=${encodeURIComponent(`owner='${me.id}'`)}`;const L=(await api('listings/records?perPage=100&sort=-created'+f)).items,e=edit?L.find(x=>x.id===edit)||{}:{};
+  const o=(v,a)=>a.map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('');
+  h+=`<form class="card f" id="lf" onsubmit="save(event)"><strong style="grid-column:1/-1">${edit?'Edit':'Add'} listing</strong>
+  <input name="title" placeholder="Title" value="${esc(e.title)}" required><input name="price" type="number" placeholder="Price" value="${e.price??''}">
+  <select name="type">${o(e.type,['sale','rent','land','commercial'])}</select><select name="status">${o(e.status||'available',['available','sold','rented','hidden'])}</select>
+  <input name="location" placeholder="Location" value="${esc(e.location)}"><input name="size" type="number" placeholder="Size (m²)" value="${e.size??''}">
+  <input name="bedrooms" type="number" placeholder="Beds" value="${e.bedrooms??''}"><input name="bathrooms" type="number" placeholder="Baths" value="${e.bathrooms??''}">
+  <input name="image" type="file" accept="image/*"><label><input type="checkbox" name="featured" style="width:auto" ${e.featured?'checked':''}> Featured</label>
+  <label><input type="checkbox" name="offer" style="width:auto" ${e.offer?'checked':''}> On offer</label><input name="old_price" type="number" placeholder="Old price (for offers)" value="${e.old_price||''}">
+  <input name="offer_note" placeholder="Offer note e.g. 10% off" value="${esc(e.offer_note)}"><textarea name="description" placeholder="Description" style="grid-column:1/-1">${esc(e.description)}</textarea>
+  <button>${edit?'Update':'Create'}</button>${edit?'<button type="button" class="s" onclick="edit=null;render()">Cancel</button>':''}</form>
+  <div class="wrap"><table><tr><th>Title</th><th>Type</th><th>Status</th><th>Location</th><th>Price</th><th></th></tr>${L.map(l=>`<tr><td>${esc(l.title)}${l.offer?' 🔥':''}</td><td>${esc(l.type)}</td><td>${esc(l.status)}</td><td>${esc(l.location)}</td><td>${Number(l.price).toLocaleString()}</td>
+  <td><button class="s" onclick="edit='${l.id}';render();scrollTo(0,0)">Edit</button> <button class="d" onclick="del('${l.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan=6>No listings yet.</td></tr>'}</table></div>`}
+ if(tab==='inquiries'){const I=(await api('inquiries/records?perPage=100&sort=handled,-created&expand=listing')).items;
+  h+=`<div class="wrap"><table><tr><th>From</th><th>Contact</th><th>Property</th><th>Message</th><th></th></tr>${I.map(i=>`<tr style="opacity:${i.handled?.5:1}"><td>${esc(i.name)}<div class="mut">${esc((i.created||'').slice(0,16))}</div></td><td>${esc(i.email)}<br>${esc(i.phone)}</td>
+  <td>${esc(i.expand&&i.expand.listing?i.expand.listing.title:'-')}</td><td>${esc(i.message)}</td><td><button class="s" onclick="mark('${i.id}',${!i.handled})">${i.handled?'Reopen':'Done'}</button></td></tr>`).join('')||'<tr><td colspan=5>No enquiries yet.</td></tr>'}</table></div>
+  <p class="mut">You see enquiries on your own listings${mgr()?' (managers see all)':''}. General contact-form messages are in the owner dashboard.</p>`}
+ app.innerHTML=h}
+async function save(ev){ev.preventDefault();const fm=ev.target,fd=new FormData(fm);fd.set('featured',fm.featured.checked);fd.set('offer',fm.offer.checked);
+ if(!fd.get('image')||!fd.get('image').name)fd.delete('image');if(!edit)fd.set('owner',me.id);
+ await api(edit?'listings/records/'+edit:'listings/records',{method:edit?'PATCH':'POST',body:fd});edit=null;render()}
+async function del(id){if(confirm('Delete this listing?')){await api('listings/records/'+id,{method:'DELETE'});render()}}
+async function mark(id,h){await api('inquiries/records/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({handled:h})});render()}
+render().catch(()=>{});
+</script></body></html>

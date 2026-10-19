@@ -1,0 +1,5 @@
+pb_data
+pocketbase
+.env
+_old_node
+node_modules

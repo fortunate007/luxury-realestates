@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luxury Real Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="/style.css"><script src="/config.js"></script></head><body>
+<div class="ann" id="ann"><span id="annt"></span><a id="anna" href="#offers"></a><button id="annx" aria-label="Close banner">×</button></div>
+<header class="top"><a class="logo" href="#home"><i class="fa-solid fa-gem" style="color:#e3bb55"></i> <span id="brand">Luxury Real Estates</span></a>
+<nav class="links"><a href="#listings">Listings</a><a href="#offers">Offers</a><a href="#categories">Categories</a><a href="#services">Services</a><a href="#about">About</a><a href="#contact">Contact</a><a href="/agent.html">Agent login</a></nav>
+<button id="mb" aria-label="Open menu">☰</button></header>
+<div id="ov"></div>
+<aside id="drawer"><button class="s" id="cl" style="align-self:flex-end">✕</button>
+<a href="#listings">Listings</a><a href="#offers">Offers</a><a href="#categories">Categories</a><a href="#services">Services</a><a href="#about">About</a><a href="#testimonials">Testimonials</a><a href="#contact">Contact</a><a href="/agent.html">Agent login</a><div class="soc"></div></aside>
+
+<div class="hero" id="home"><h1 class="gt">Find the property that fits your life</h1><p id="tag"></p></div>
+
+<div class="shop" id="listings">
+<button id="ft" class="s" onclick="$('side').classList.toggle('open')"><i class="fa-solid fa-sliders"></i> Filters</button>
+<form class="side" id="side" onsubmit="event.preventDefault();load()">
+<h3 class="gt" style="margin:0">Search properties</h3>
+<label>Keyword</label><input name="q" placeholder="e.g. garden, pool">
+<label>Location</label><input name="location" placeholder="e.g. Westlands">
+<label>Type</label><select name="type"><option value="">All types</option><option value="sale">For sale</option><option value="rent">For rent</option><option value="land">Land</option><option value="commercial">Commercial</option></select>
+<label>Price</label><div class="two"><input name="minPrice" type="number" min="0" placeholder="Min"><input name="maxPrice" type="number" min="0" placeholder="Max"></div>
+<label>Size (m²)</label><div class="two"><input name="minSize" type="number" min="0" placeholder="Min"><input name="maxSize" type="number" min="0" placeholder="Max"></div>
+<label>Bedrooms (min)</label><select name="beds"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)"><input type="checkbox" name="offer" style="width:auto"> Offers only</label>
+<button><i class="fa-solid fa-magnifying-glass"></i> Search</button><button type="button" class="s" onclick="$('side').reset();load()">Reset</button></form>
+<div><h2>Listings</h2><p class="sub" id="count">Loading…</p><div id="grid" class="grid"></div>
+<div id="inq" class="card b" style="display:none;margin-top:24px"><form class="f" onsubmit="send(event,true)"><strong style="grid-column:1/-1">Enquire about: <span id="lt"></span></strong>
+<input name="name" placeholder="Your name" required><input name="email" type="email" placeholder="Email"><input name="phone" placeholder="Phone">
+<textarea name="message" placeholder="Message" style="grid-column:1/-1"></textarea><button>Send enquiry</button></form></div></div></div>
+
+<section class="alt" id="offers"><div><h2><i class="fa-solid fa-fire"></i> Special offers</h2><p class="sub">Limited-time deals on selected properties.</p><div id="ogrid" class="grid"></div></div></section>
+
+<section id="categories"><h2>Browse by category</h2><p class="sub">Tap a category to filter the listings.</p><div class="grid">
+<div class="card cat" onclick="cat('sale')"><div class="ico"><i class="fa-solid fa-house"></i></div>For Sale</div><div class="card cat" onclick="cat('rent')"><div class="ico"><i class="fa-solid fa-key"></i></div>For Rent</div>
+<div class="card cat" onclick="cat('land')"><div class="ico"><i class="fa-solid fa-tree"></i></div>Land</div><div class="card cat" onclick="cat('commercial')"><div class="ico"><i class="fa-solid fa-building"></i></div>Commercial</div></div></section>
+
+<section class="alt" id="services"><div><h2>Our services</h2><p class="sub">From first search to keys in hand.</p><div class="grid">
+<div class="card b"><div class="ico"><i class="fa-solid fa-house-circle-check"></i></div><h3>Buying</h3><p class="mut">Shortlisting, viewings, negotiation and title checks.</p></div>
+<div class="card b"><div class="ico"><i class="fa-solid fa-key"></i></div><h3>Renting</h3><p class="mut">Verified rentals, tenant screening and clear leases.</p></div>
+<div class="card b"><div class="ico"><i class="fa-solid fa-tags"></i></div><h3>Selling &amp; Letting</h3><p class="mut">Professional listing, marketing and valuation.</p></div>
+<div class="card b"><div class="ico"><i class="fa-solid fa-screwdriver-wrench"></i></div><h3>Property Management</h3><p class="mut">Rent collection, maintenance and reporting.</p></div>
+<div class="card b"><div class="ico"><i class="fa-solid fa-map-location-dot"></i></div><h3>Land &amp; Development</h3><p class="mut">Plot sourcing and development support.</p></div>
+<div class="card b"><div class="ico"><i class="fa-solid fa-chart-line"></i></div><h3>Valuation &amp; Advice</h3><p class="mut">Honest valuations and investment guidance.</p></div></div></div></section>
+
+<section id="about"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:34px"><div><h2>About us</h2><p>We are a real estate team focused on honest advice and verified listings, guiding you through every step of buying, renting or investing.</p></div>
+<div><h2>Why choose us</h2><p><i class="fa-solid fa-circle-check" style="color:#e3bb55"></i> Verified listings and documents<br><i class="fa-solid fa-circle-check" style="color:#e3bb55"></i> Transparent pricing<br><i class="fa-solid fa-circle-check" style="color:#e3bb55"></i> Local market knowledge<br><i class="fa-solid fa-circle-check" style="color:#e3bb55"></i> Support from viewing to handover</p></div></div></section>
+
+<section class="alt" id="testimonials"><div><h2>What clients say</h2><p class="sub">Sample testimonials. Replace with real ones.</p><div class="grid">
+<div class="card b quote"><i class="fa-solid fa-quote-left"></i>Found our family home in two weeks. Smooth and honest.<p class="mut">— Happy buyer</p></div>
+<div class="card b quote"><i class="fa-solid fa-quote-left"></i>They manage my rentals and the income has been steady.<p class="mut">— Property owner</p></div>
+<div class="card b quote"><i class="fa-solid fa-quote-left"></i>Clear advice on land titles saved me from a bad deal.<p class="mut">— Investor</p></div></div></div></section>
+
+<section style="padding-block:20px"><div class="cta"><div><h2 id="ctat"></h2><p id="ctap"></p></div><a class="btn" href="#contact" id="ctab"></a></div></section>
+
+<section id="contact"><h2>Contact us</h2><p class="sub">Tell us what you are looking for.</p>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"><div class="card b"><form class="f" onsubmit="send(event,false)">
+<input name="name" placeholder="Your name" required><input name="email" type="email" placeholder="Email"><input name="phone" placeholder="Phone">
+<textarea name="message" placeholder="How can we help?" style="grid-column:1/-1"></textarea><button>Send message</button></form></div>
+<div class="card b"><h3>Get in touch</h3><p id="cinfo"></p><h3>Follow us</h3><div class="soc"></div></div></div></section>
+
+<footer><div class="fg"><div><h4 id="fname"></h4><p id="ftag"></p><div class="soc" style="margin-top:12px"></div></div>
+<div><h4>Quick links</h4><a class="fl" href="#listings">Listings</a><a class="fl" href="#offers">Offers</a><a class="fl" href="#services">Services</a><a class="fl" href="#contact">Contact</a><a class="fl" href="/agent.html">Agent login</a></div>
+<div><h4>Contact</h4><p id="fcon"></p></div></div><div class="copy">© <span id="yr"></span> <span id="fname2"></span>. All rights reserved.</div></footer>
+<a class="wa" id="wa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" style="display:none"><i class="fa-brands fa-whatsapp"></i></a>
+
+<script>
+const CUR='$',API='/api/collections/',S=window.SITE||{};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id),Q=s=>"'"+String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+"'",money=n=>CUR+Number(n||0).toLocaleString();
+const safe=u=>/^(#|https?:|mailto:|tel:)/.test(u||'')?u:'#';let cur=null;
+function init(){const n=S.name||'Luxury Real Estates';document.title=n;$('brand').textContent=n;$('fname').textContent=n;$('fname2').textContent=n;
+ $('tag').textContent=S.tagline||'';$('ftag').textContent=S.tagline||'';$('yr').textContent=new Date().getFullYear();
+ const b=S.banner;if(b&&b.text&&!sessionStorage.annx){$('annt').textContent=b.text;$('anna').textContent=b.linkText||'';$('anna').href=safe(b.link)}else $('ann').style.display='none';
+ $('annx').onclick=()=>{sessionStorage.annx=1;$('ann').style.display='none'};
+ const c=S.cta||{};$('ctat').textContent=c.title||'';$('ctap').textContent=c.text||'';$('ctab').textContent=c.button||'Contact us';
+ const info=[['phone','fa-phone',S.phone,v=>'tel:'+v.replace(/\s/g,'')],['email','fa-envelope',S.email,v=>'mailto:'+v],['addr','fa-location-dot',S.address,null]].filter(x=>x[2])
+  .map(([k,i,v,h])=>`<i class="fa-solid ${i}" style="color:#e3bb55;width:20px"></i> ${h?`<a href="${esc(safe(h(v)))}" style="color:inherit;text-decoration:none">${esc(v)}</a>`:esc(v)}`).join('<br>');
+ $('cinfo').innerHTML=info;$('fcon').innerHTML=info;
+ const soc=(S.social||[]).filter(s=>s.url).map(s=>`<a href="${esc(safe(s.url))}" target="_blank" rel="noopener" aria-label="${esc(s.name)}" title="${esc(s.name)}"><i class="fa-brands fa-${esc(s.icon)}"></i></a>`).join('');
+ document.querySelectorAll('.soc').forEach(e=>e.innerHTML=soc);
+ const w=(S.social||[]).find(s=>s.icon==='whatsapp'&&s.url);if(w){$('wa').href=safe(w.url);$('wa').style.display='grid'}}
+const dr=o=>{$('drawer').classList.toggle('open',o);$('ov').classList.toggle('open',o)};
+$('mb').onclick=()=>dr(true);$('cl').onclick=()=>dr(false);$('ov').onclick=()=>dr(false);
+document.querySelectorAll('#drawer>a').forEach(a=>a.addEventListener('click',()=>dr(false)));
+async function recs(filter){const p=new URLSearchParams({perPage:'60',sort:'-featured,-created'});if(filter)p.set('filter',filter);
+ const r=await fetch(API+'listings/records?'+p);if(!r.ok)throw new Error('Could not load listings');return (await r.json()).items}
+function card(l){const im=l.image?`/api/files/${l.collectionId}/${l.id}/${encodeURIComponent(l.image)}`:null,off=l.offer&&l.old_price>l.price;
+ return `<div class="card">${off?`<span class="rib">${Math.round((1-l.price/l.old_price)*100)}% OFF</span>`:''}${im?`<img src="${esc(im)}" alt="${esc(l.title)}" loading="lazy">`:'<div class="ph"></div>'}<div class="b">
+ <span class="tag">${esc(l.type)}</span>${l.status!=='available'?`<span class="tag">${esc(l.status)}</span>`:''}${l.featured?'<span class="tag">★ featured</span>':''}
+ <h3>${esc(l.title)}</h3><div class="price">${money(l.price)}${off?`<span class="old">${money(l.old_price)}</span>`:''}</div>${l.offer&&l.offer_note?`<div class="mut"><i class="fa-solid fa-gift"></i> ${esc(l.offer_note)}</div>`:''}
+ <div class="mut"><i class="fa-solid fa-location-dot"></i> ${esc(l.location)} · <i class="fa-solid fa-ruler-combined"></i> ${l.size} m²${l.bedrooms?` · <i class="fa-solid fa-bed"></i> ${l.bedrooms}`:''}${l.bathrooms?` · <i class="fa-solid fa-bath"></i> ${l.bathrooms}`:''}</div>
+ <p>${esc(l.description)}</p><button data-id="${l.id}" data-t="${esc(l.title)}" onclick="pk(this.dataset.id,this.dataset.t)">Enquire</button></div></div>`}
+function filt(){const f=new FormData($('side')),c=[],g=k=>f.get(k);
+ if(g('q'))c.push(`(title ~ ${Q(g('q'))} || description ~ ${Q(g('q'))} || location ~ ${Q(g('q'))})`);
+ if(g('location'))c.push(`location ~ ${Q(g('location'))}`);if(g('type'))c.push(`type = ${Q(g('type'))}`);
+ [['minPrice','price','>='],['maxPrice','price','<='],['minSize','size','>='],['maxSize','size','<='],['beds','bedrooms','>=']].forEach(([k,fl,op])=>{if(g(k)!==''&&isFinite(+g(k)))c.push(`${fl} ${op} ${+g(k)}`)});
+ if(g('offer'))c.push('offer = true');return c.join(' && ')}
+async function load(){try{const r=await recs(filt());$('count').textContent=r.length+' propert'+(r.length===1?'y':'ies')+' found';
+ $('grid').innerHTML=r.map(card).join('')||'<p>No properties match your search.</p>'}catch(e){$('count').textContent=e.message}}
+async function offers(){try{const r=await recs("offer = true && status = 'available'");$('ogrid').innerHTML=r.map(card).join('')||'<p>No offers right now. Check back soon.</p>'}catch(e){}}
+function cat(t){$('side').reset();$('side').type.value=t;load();$('listings').scrollIntoView()}
+function pk(id,t){cur=id;$('lt').textContent=t;$('inq').style.display='block';$('inq').scrollIntoView({behavior:'smooth'})}
+async function send(e,withListing){e.preventDefault();const b=Object.fromEntries(new FormData(e.target));if(withListing&&cur)b.listing=cur;
+ const r=await fetch(API+'inquiries/records',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+ if(r.ok){alert('Thank you! We will be in touch.');e.target.reset();$('inq').style.display='none'}else alert('Could not send. Please add your name and an email or phone.')}
+init();load();offers();
+</script></body></html>
